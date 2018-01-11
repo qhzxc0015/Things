@@ -12,35 +12,28 @@ import java.util.Map;
 
 import net.sf.json.JSONObject;
 
+import org.elasticsearch.action.bulk.BackoffPolicy;
+import org.elasticsearch.action.bulk.BulkProcessor;
+import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.bulk.BulkProcessor.Listener;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.cluster.node.DiscoveryNode;
+import org.elasticsearch.common.unit.ByteSizeUnit;
+import org.elasticsearch.common.unit.ByteSizeValue;
+import org.elasticsearch.common.unit.TimeValue;
 //生成模拟数据并构建索引 UTF-8
 public class genData {
 	public static void main(String[] args) throws IOException {
-        initCity("src/addr.txt");
-        int count = 1;
-        long begin= System.currentTimeMillis();
+		//num表示需要构建索引的条数,commit为多少条bulk构建一次单位为1000
+		int sum=20000,commit=5;
+        initCity("src/addr.txt");                
         //建立es连接
         Client client = new ClientFactory().getClient();
-        //声明批量bulk
-        BulkRequestBuilder bulk = client.prepareBulk();
-        for (int i = 1; i <= (1*10000); i++) {
-        	//bulk添加到person2，这就需要首先存在具有json所有数据的person2先插入
-                bulk.add(client.prepareIndex("person2", "info").setSource(new genData().getJson()));
-                if (i % (1*1000) == 0) {
-                	//bulk执行提交
-                        bulk.execute().actionGet();
-                        System.gc();
-                        System.out.println("提交:" + count/10000+"万; "+count/10000/1000+"亿");
-                        long end1= System.currentTimeMillis();
-                        System.out.println("耗时:"+new genData().getTime(begin, end1)+"\n");
-                }
-                count++;
-        }
-        long end= System.currentTimeMillis();
-        System.out.println("耗时:"+new genData().getTime(begin, end));
-        System.out.println("finshed");
+        Create_index(client,sum,commit);          
 }	
+
 /**
  * 构建索引
 curl -XPOST "http://202.193.74.70:9200/person2/info/1" -d'
@@ -62,6 +55,62 @@ curl -XGET "http://202.193.74.70:9200/person2/info/_search" -d'
   }
 }'
 **/
+	//构建索引
+	private static void Create_index(Client client,int unm,int commit) {
+		long begin= System.currentTimeMillis();
+		int count = 1;
+		//声明批量bulk,按次数提交
+	    BulkRequestBuilder bulk = client.prepareBulk();
+	    for (int i = 1; i <= (1*unm); i++) {
+	    	//bulk添加到person2，这就需要首先存在具有json所有数据的person2先插入
+	            bulk.add(client.prepareIndex("person2", "info").setSource(new genData().getJson()));
+	            if (i % (commit*1000) == 0) {
+	            	//bulk执行提交
+	                    bulk.execute().actionGet();
+	                    System.gc();
+	                    //计时
+	                    System.out.println("提交:" + count/10000+"万; "+count/10000/1000+"亿");
+	                    long end1= System.currentTimeMillis();
+	                    System.out.println("耗时:"+new genData().getTime(begin, end1)+"\n");
+	            }
+	            count++;
+	    }
+	    /**
+	    // 创建BulkPorcessor对象
+	    BulkProcessor bulkProcessor = BulkProcessor.builder(client, new Listener() {
+	        public void beforeBulk(long paramLong, BulkRequest paramBulkRequest) {
+	            // TODO Auto-generated method stub
+	        }
+	        
+	        // 执行出错时执行
+	        public void afterBulk(long paramLong, BulkRequest paramBulkRequest, Throwable paramThrowable) {
+	            // TODO Auto-generated method stub
+	        }
+	        
+	        public void afterBulk(long paramLong, BulkRequest paramBulkRequest, BulkResponse paramBulkResponse) {
+	            // TODO Auto-generated method stub
+	        }
+	    })        
+	    // 1w次请求执行一次bulk
+	    .setBulkActions(10000)
+	    // 1gb的数据刷新一次bulk
+	    .setBulkSize(new ByteSizeValue(1, ByteSizeUnit.GB))
+	    // 固定5s必须刷新一次
+	    .setFlushInterval(TimeValue.timeValueSeconds(5))
+	    // 并发请求数量, 0不并发, 1并发允许执行
+	    .setConcurrentRequests(1)
+	    // 设置退避, 100ms后执行, 最大请求3次
+	    .setBackoffPolicy(
+	            BackoffPolicy.exponentialBackoff(TimeValue.timeValueMillis(100), 3))
+	    .build();
+	    **/
+	    //计时    
+	    long end= System.currentTimeMillis();
+	    System.out.println("耗时:"+new genData().getTime(begin, end));
+	    System.out.println("finshed");
+		}
+	
+
 	
 	
 	//生成数据并封装成json
