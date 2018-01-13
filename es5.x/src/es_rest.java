@@ -25,9 +25,10 @@ public class es_rest {
 		System.out.println("关键词"+"'"+str+"'"+"总共命中条数："+search_index_total(type,str));
 		long end= System.currentTimeMillis();
 		System.out.println("耗时:"+new create_data().getTime(begin, end)+"秒");
-				int num=200000;//构建索引条数
+		//单条构建速度极慢，推荐用bulk		
+		//int num=200000;//构建索引条数
 		//构建索引
-		create_index(num);
+		//create_index(num);
 		
 		}
 
