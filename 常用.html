@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html> 
 <head>
-   <title>常用</title>
+<link href="http://ou9i51fe5.bkt.clouddn.com/2.png" rel="shortcut icon" />
+   <title>biu~biu~</title>
   <!-- <link rel="stylesheet" href="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">  
    <script src="https://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
    <script src="js/bootstrap.min.js"></script>-->
@@ -10,6 +11,7 @@
 	  <script src=".\bootstrap-3.3.7-dist\js\jquery.min.js"></script>
       <script src=".\bootstrap-3.3.7-dist\js\bootstrap.min.js"></script>
       <script src=".\bootstrap-3.3.7-dist\js\jsbootstrap.js"></script>
+      <script src=".\bootstrap-3.3.7-dist\js\echarts.min.js"></script>
 	  <script src="activate-power-mode.js"></script>
 <script>
 POWERMODE.colorful = true; // make power mode colorful
@@ -118,10 +120,12 @@ document.body.addEventListener('input', POWERMODE);
 				<p><span style="cursor:pointer"><a target="_blank" href="file:///G:/coding/mymyhtml/index.html">index</a> </span></p>
 			</div>
 		</div>
+					
 				<div class="col-md-1 column">
 			<h2>
 				-Cos
 			</h2>
+
 			<div>
 				<p><span style="cursor:pointer"><a target="_blank" href="https://free.com.tw/">FreeSource</a> </span></p>
 				<p><span style="cursor:pointer"><a target="_blank" href="http://gank.io/">Gank</a> </span></p>		
@@ -142,7 +146,8 @@ document.body.addEventListener('input', POWERMODE);
 				<p><span style="cursor:pointer"><a target="_blank" href="https://sendit.cloud/">7days'FTP</a> </span></p>					
 				<p><span style="cursor:pointer"><a target="_blank" href="http://workflow.sspai.com/#/main/workflow">workflow</a> </span></p>					
 				<p><span style="cursor:pointer"><a target="_blank" href="https://sm.ms/">sm.ms</a> </span></p>					
-				<p><span style="cursor:pointer"><a target="_blank" href="file:///D:/aria2%E7%BD%91%E9%A1%B5%E7%89%88/webui-aria2-master/index.html#!/">aria2</a> </span></p>					
+				<p><span style="cursor:pointer"><a target="_blank" href="file:///D:/aria2%E7%BD%91%E9%A1%B5%E7%89%88/webui-aria2-master/index.html#!/">aria2</a> </span></p>		
+				<p><span style="cursor:pointer"><a target="_blank" href="http://ios.scdxc.top/">ios share</a> </span></p>					
 			</div>
 		</div>
 				<div class="col-md-1 column">
@@ -168,6 +173,7 @@ document.body.addEventListener('input', POWERMODE);
 				<p><span style="cursor:pointer"><a target="_blank" href="https://leancloud.cn/">LeanCloud</a> </span></p>				
 				<p><span title="Swagger UI是一款RESTFUL接口的文档在线自动生成+功能测试功能软件" style="cursor:pointer"><a target="_blank" href="https://swagger.io/swagger-ui/">SWAGGER</a> </span></p>		
 				<p><span style="cursor:pointer"><a target="_blank" href="https://daneden.github.io/animate.css/">css</a> </span></p>					
+				<p><span style="cursor:pointer"><a target="_blank" href="https://alpha.wallhaven.cc/">壁纸</a> </span></p>					
 			</div>
 		</div>
 				<div class="col-md-1 column">
@@ -181,6 +187,7 @@ document.body.addEventListener('input', POWERMODE);
 				<p><span style="cursor:pointer"><a target="_blank" href="http://office.mmais.com.cn/Template/Home.shtml">OfficePluse</a> </span></p>	
 				<p><span style="cursor:pointer"><a target="_blank" href="http://radar.itjuzi.com/">桔子雷达</a> </span></p>	
 				<p><span style="cursor:pointer"><a target="_blank" href="http://www.tianyancha.com/">天眼查</a> </span></p>	
+
 			</div>
 		</div>
 						<div class="col-md-1 column">
@@ -190,6 +197,7 @@ document.body.addEventListener('input', POWERMODE);
 			<div>				
 				<p><span style="cursor:pointer"><a target="_blank" href="http://www.forbeschina.com/">Forbes</a> </span></p>	
 				<p><span style="cursor:pointer"><a target="_blank" href="https://www.tapd.cn/">Tapd</a> </span></p>	
+				<p><span style="cursor:pointer"><a target="_blank" href="http://dwz.wailian.work">短连接</a> </span></p>	
 				<p><span style="cursor:pointer"><a target="_blank" href="https://witeboard.com">witeboard</a> </span></p>	
 			</div>
 		</div>
@@ -403,6 +411,43 @@ document.body.addEventListener('input', POWERMODE);
 		</div>
 	</div>
 </div>
+    <div id="main" style="width:100%;height:400px;"></div>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main'));
 
+		var data = [];
+for (var i = 0; i <= 100; i++) {
+    var theta = i / 100 * 360;
+    var r = 5 * (1 + Math.sin(theta / 180 * Math.PI));
+    data.push([r, theta]);
+}
+//echarts替换option
+        var option = {
+      legend: {
+        data: ['li1ne']
+    },
+    polar: {},
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross'
+        }
+    },
+    angleAxis: {
+        type: 'value',
+        startAngle: 0
+    },
+    radiusAxis: {
+    },
+    series: [{
+        coordinateSystem: 'polar',
+        name: 'line',
+        type: 'line',
+        data: data
+    }]
+};
+
+        myChart.setOption(option);
+    </script>
 </body>
 </html>
